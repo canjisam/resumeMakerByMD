@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 环境安装指南
 ## NVM 安装
 ``` 
@@ -12,3 +13,7 @@ nvm use 16
 ```
 npm run dev
 ```
+=======
+# resumeMakerByMD
+resumeMakerByMD
+>>>>>>> a4da697 (Initial commit)
