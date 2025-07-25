@@ -9,26 +9,11 @@ import {
 } from '@meituan-nocode/vite-plugin-nocode-html-transformer';
 import react from '@vitejs/plugin-react';
 
-const CHAT_VARIABLE = process.env.CHAT_VARIABLE || '';
-const PUBLIC_PATH = process.env.PUBLIC_PATH || '';
-
 const isProdEnv = process.env.NODE_ENV === 'production';
-const publicPath = (isProdEnv && CHAT_VARIABLE)
-  ? PUBLIC_PATH + '/' + CHAT_VARIABLE
-  : PUBLIC_PATH + '/';
-const outDir = (isProdEnv && CHAT_VARIABLE) ? 'build/' + CHAT_VARIABLE : 'build';
-const plugins = isProdEnv
-  ? CHAT_VARIABLE
-    ? [react(), prodHtmlTransformer(CHAT_VARIABLE)]
-    : [react()]
-  : [
-      devLogger({
-        dirname: resolve(tmpdir(), '.nocode-dev-logs'),
-        maxFiles: '3d',
-      }),
-      react(),
-      devHtmlTransformer(CHAT_VARIABLE),
-    ];
+const repoName = 'resumeMakerByMD';
+const base = isProdEnv ? `/${repoName}/` : '/';
+const outDir = 'dist';
+const plugins = [react()];
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -40,7 +25,7 @@ export default defineConfig({
     },
   },
   plugins,
-  base: publicPath,
+  base,
   build: {
     outDir,
   },
