@@ -2,6 +2,7 @@ import MarkdownIt from 'markdown-it';
 import ejs from 'ejs';
 import { parseFrontMatter } from './parseFrontMatter';
 import { createCustomMarkdownRenderer } from './customMarkdown';
+import { aliIconConfig } from '@/config/aliIcons';
 
 // 创建自定义Markdown渲染器
 const customMd = createCustomMarkdownRenderer();
@@ -129,7 +130,7 @@ export function renderHtml(markdown, template, styles = {}) {
     // 直接渲染整个Markdown内容，不再分离前置元数据
     const body = customMd.render(markdown);
     
-    // 在模板中添加自定义样式
+    // 在模板中添加自定义样式和阿里巴巴图标
     if (template) {
       const { fontSize = '14px', lineHeight = 1.6 } = styles;
       const styleTag = `<style id="custom-markdown-styles">
@@ -139,7 +140,8 @@ export function renderHtml(markdown, template, styles = {}) {
           line-height: ${lineHeight} !important;
         }
       </style>`;
-      template = template.replace('</head>', `${styleTag}</head>`);
+      const iconLink = `<link rel="stylesheet" href="${aliIconConfig.cssUrl}">`;
+      template = template.replace('</head>', `${styleTag}${iconLink}</head>`);
     }
     
     // 只使用body数据，不再使用前置元数据
