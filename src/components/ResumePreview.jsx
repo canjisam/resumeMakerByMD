@@ -1,10 +1,13 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { usePageBreaks } from '@/hooks/usePageBreaks';
 import { useResumeStore } from '@/store/resumeStore';
 import { renderHtml } from '@/utils/renderHtml';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader } from '@/components/ui/card';
+import { PageCounter } from './PageCounter';
+import { StyleControl } from './StyleControl';
 
 export function ResumePreview() {
-  const { markdown, templates, selectedTemplate } = useResumeStore();
+  const { markdown, templates, selectedTemplate, exportStyles } = useResumeStore();
   
   const htmlContent = useMemo(() => {
     try {
@@ -12,7 +15,7 @@ export function ResumePreview() {
       if (!template) {
         throw new Error('未找到选中的模板');
       }
-      return renderHtml(markdown, template);
+      return renderHtml(markdown, template, exportStyles);
     } catch (error) {
       console.error('简历渲染错误:', error);
       return `
@@ -65,16 +68,35 @@ export function ResumePreview() {
         </html>
       `;
     }
-  }, [markdown, templates, selectedTemplate]);
+  }, [markdown, templates, selectedTemplate, exportStyles]);
+
+
+
+  const iframeRef = useRef(null);
+  const pageBreaks = usePageBreaks(iframeRef);
 
   return (
     <Card className="h-full overflow-hidden">
+      <CardHeader className="py-3 space-y-3">
+        <div className="flex justify-between items-center">
+          <PageCounter pageBreaks={pageBreaks} />
+        </div>
+        <StyleControl />
+      </CardHeader>
       <div className="h-full overflow-auto">
         <iframe
+          ref={iframeRef}
           srcDoc={htmlContent}
           className="w-full h-full border-0"
           title="简历预览"
           sandbox="allow-same-origin"
+          style={{
+            height: '100%',
+            width: '100%',
+            border: 'none',
+            fontSize: exportStyles.fontSize,
+            lineHeight: exportStyles.lineHeight,
+          }}
         />
       </div>
     </Card>

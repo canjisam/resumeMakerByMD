@@ -1,9 +1,22 @@
 import { asBlob } from 'html-docx-js-typescript';
 
 export function useExportWord() {
-  return async (htmlContent, filename = '简历.docx') => {
+  return async (htmlContent, filename = '简历.docx', styles = {}) => {
     try {
-      const blob = await asBlob(htmlContent, { 
+      const styledHtml = `
+        <html>
+          <head>
+            <style>
+              .container {
+                font-size: ${styles.fontSize || '14px'};
+                line-height: ${styles.lineHeight || 1.6};
+              }
+            </style>
+          </head>
+          <body>${htmlContent}</body>
+        </html>
+      `;
+      const blob = await asBlob(styledHtml, { 
         orientation: 'portrait',
         margins: { top: 720, right: 720, bottom: 720, left: 720 }
       });

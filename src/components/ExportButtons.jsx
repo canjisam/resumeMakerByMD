@@ -1,27 +1,28 @@
 import { Button } from '@/components/ui/button';
-import { Download, FileText, Printer } from 'lucide-react';
+import { FileText, Printer } from 'lucide-react';
 import { usePrintPdf } from '@/hooks/usePrintPdf';
 import { useExportWord } from '@/hooks/useExportWord';
 import { useResumeStore } from '@/store/resumeStore';
 import { renderHtml } from '@/utils/renderHtml';
+import { ExportStyleControl } from './ExportStyleControl';
 
 export function ExportButtons() {
   const printPdf = usePrintPdf();
   const exportWord = useExportWord();
-  const { markdown, templates, selectedTemplate } = useResumeStore();
+  const { markdown, templates, selectedTemplate, exportStyles } = useResumeStore();
 
   const handlePrint = () => {
     const html = renderHtml(markdown, templates[selectedTemplate]);
-    printPdf(html, '我的简历');
+    printPdf(html, '我的简历', exportStyles);
   };
 
   const handleExportWord = () => {
     const html = renderHtml(markdown, templates[selectedTemplate]);
-    exportWord(html, '我的简历.docx');
+    exportWord(html, '我的简历.docx', exportStyles);
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex items-center gap-2">
       <Button onClick={handlePrint} variant="outline">
         <Printer className="h-4 w-4 mr-2" />
         打印/PDF
@@ -30,6 +31,7 @@ export function ExportButtons() {
         <FileText className="h-4 w-4 mr-2" />
         导出Word
       </Button>
+      <ExportStyleControl />
     </div>
   );
 }

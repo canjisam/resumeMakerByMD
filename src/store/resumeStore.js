@@ -4,6 +4,10 @@ import { persist } from 'zustand/middleware';
 export const useResumeStore = create(
   persist(
     (set) => ({
+      exportStyles: {
+        fontSize: '14px',
+        lineHeight: 1.6,
+      },
       markdown: `# 张思宇
 **中级 Java 后端开发工程师 | 云原生 & 高并发**
 
@@ -62,12 +66,13 @@ export const useResumeStore = create(
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       line-height: 1.6;
       color: #2c3e50;
       background: #f8f9fa;
       padding: 2rem;
-    }
+      position: relative;
+    }    }
     .container {
       max-width: 800px;
       margin: 0 auto;
@@ -96,9 +101,15 @@ export const useResumeStore = create(
     strong {
       color: #2c3e50;
     }
+    .page-break {
+      display: none;
+    }
     @media print {
       body { background: white; padding: 0; }
       .container { box-shadow: none; padding: 1rem; }
+      .page-break { display: none; }
+      @page { size: A4; margin: 2cm; }
+      .container { page-break-inside: avoid; }
     }
   </style>
 </head>
@@ -409,6 +420,7 @@ export const useResumeStore = create(
       },
       setMarkdown: (markdown) => set({ markdown }),
       setSelectedTemplate: (template) => set({ selectedTemplate: template }),
+      setExportStyles: (styles) => set({ exportStyles: styles }),
     }),
     {
       name: 'resume-storage',

@@ -1,5 +1,5 @@
 export function usePrintPdf() {
-  return (htmlContent, title = '简历') => {
+  return (htmlContent, title = '简历', styles = {}) => {
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
       <html>
@@ -9,6 +9,10 @@ export function usePrintPdf() {
             @media print {
               body { margin: 0; }
               @page { margin: 2cm; }
+            }
+            .container {
+              font-size: ${styles.fontSize || '14px'};
+              line-height: ${styles.lineHeight || 1.6};
             }
           </style>
         </head>

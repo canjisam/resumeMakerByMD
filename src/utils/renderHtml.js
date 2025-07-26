@@ -124,14 +124,22 @@ const customStyles = `
 }
 `;
 
-export function renderHtml(markdown, template) {
+export function renderHtml(markdown, template, styles = {}) {
   try {
     // 直接渲染整个Markdown内容，不再分离前置元数据
     const body = customMd.render(markdown);
     
     // 在模板中添加自定义样式
-    if (template && !template.includes('<style id="custom-markdown-styles">')) {
-      template = template.replace('</head>', `<style id="custom-markdown-styles">${customStyles}</style></head>`);
+    if (template) {
+      const { fontSize = '14px', lineHeight = 1.6 } = styles;
+      const styleTag = `<style id="custom-markdown-styles">
+        ${customStyles}
+        body {
+          font-size: ${fontSize} !important;
+          line-height: ${lineHeight} !important;
+        }
+      </style>`;
+      template = template.replace('</head>', `${styleTag}</head>`);
     }
     
     // 只使用body数据，不再使用前置元数据
